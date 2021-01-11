@@ -353,6 +353,7 @@ void iForest::fit (double* X_in, int nobjs_in, int dim_in)
 	#pragma omp parallel
 	{
 		std::vector<double> Xsubset; 
+		#pragma omp for nowait
 		for (int i=0; i<ntrees; i++)
 		{
 			/* Select a random subset of X_in of size sample_in */
