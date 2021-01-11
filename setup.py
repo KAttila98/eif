@@ -29,7 +29,7 @@ setup(
     ext_modules=[Extension("eif",
                  sources=["_eif.pyx", "eif.cxx"],
                  include_dirs=[numpy.get_include()],
-                 extra_compile_args=['-std=c++11','-fopenmp', '-O2'],
+                 extra_compile_args=['-std=c++11','-openmp', '-O2'],
                  language="c++")],
     scripts=[],
     py_modules=['eif_old', 'version'],
