@@ -383,18 +383,21 @@ void iForest::predict (double* S, double* X_in=NULL, int size_in=0)
 		X_in = X;
 		size_in = nobjs;
 	}
-
-	double htemp, havg;
-	for (int i=0; i<size_in; i++)
+	#pragma omp parallel
 	{
-		htemp = 0.0;
-		for (int j=0; j<ntrees; j++)
+		#pragma omp for nowait
+		for (int i=0; i<size_in; i++)
 		{
-			Path path (dim, &X_in[i*dim], Trees[j]);
-			htemp += path.pathlength;
+			double htemp, havg;
+			htemp = 0.0;
+			for (int j=0; j<ntrees; j++)
+			{
+				Path path (dim, &X_in[i*dim], Trees[j]);
+				htemp += path.pathlength;
+			}
+			havg = htemp/ntrees;
+			S[i] = std::pow(2.0, -havg/c);
 		}
-		havg = htemp/ntrees;
-		S[i] = std::pow(2.0, -havg/c);
 	}
 
 }
