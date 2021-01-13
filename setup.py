@@ -42,4 +42,3 @@ setup(
     url='https://github.com/sahandha/eif',
     install_requires=["numpy", "cython"],
 )
-pip install git+https://github.com/KAttila98/eif.git
