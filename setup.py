@@ -1,13 +1,23 @@
 import sys
 import os
-import numpy
-from Cython.Distutils import build_ext
+
 try:
     from setuptools import setup, find_packages
+    from setuptools.dist import Distribution
     from setuptools.extension import Extension
 except ImportError:
     from distutils.core import setup
+    from distutils.core import Distribution
     from distutils.extension import Extension
+    
+try:
+    import numpy
+    from Cython.Distutils import build_ext
+except ImportError:
+    Distribution().fetch_build_eggs(['Cython', 'numpy'])
+    import numpy
+    from Cython.Distutils import build_ext
+    
 prjdir = os.path.dirname(__file__)
 
 
@@ -20,6 +30,12 @@ libraries = []
 library_dirs = []
 include_dirs = []
 exec(open('version.py').read())
+
+if sys.platform.startswith('linux'):
+    e_c_a = ['-fopenmp', '-O2']
+elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
+    e_c_a = ['-openmp', '-O2']
+
 setup(
     name='eif',
     version=__version__,
@@ -29,7 +45,7 @@ setup(
     ext_modules=[Extension("eif",
                  sources=["_eif.pyx", "eif.cxx"],
                  include_dirs=[numpy.get_include()],
-                 extra_compile_args=['-openmp', '-O2'],
+                 extra_compile_args=e_c_a,
                  language="c++")],
     scripts=[],
     py_modules=['eif_old', 'version'],
