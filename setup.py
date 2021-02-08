@@ -33,8 +33,10 @@ exec(open('version.py').read())
 
 if sys.platform.startswith('linux'):
     e_c_a = ['-fopenmp', '-O2']
+    e_l_a = ['-fopenmp']
 elif sys.platform.startswith('win32') or sys.platform.startswith('cygwin'):
     e_c_a = ['-openmp', '-O2']
+    e_l_a = ['-openmp']
 
 setup(
     name='eif',
@@ -46,6 +48,7 @@ setup(
                  sources=["_eif.pyx", "eif.cxx"],
                  include_dirs=[numpy.get_include()],
                  extra_compile_args=e_c_a,
+                 extra_link_args=e_l_a,
                  language="c++")],
     scripts=[],
     py_modules=['eif_old', 'version'],
